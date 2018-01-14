@@ -4,15 +4,16 @@
 
 > Node.js 8 library for interacting with the Anne Pro keyboard
 
-**IMPORTANT**: currently it only works in macOS
+**IMPORTANT**: only works in macOS currently
 
 Current Features:
 
-- set keyboard lighting mode
+- set lighting mode
+- set lighting mode speed and brightness
+- set layout
 
 Roadmap:
 
-- [ ] Layouts
 - [ ] Macros
 
 ## Install
@@ -21,7 +22,36 @@ Roadmap:
 npm install anne-pro
 ```
 
+Or if you want to use the command line utility:
+
+```bash
+npm install -g anne-pro
+```
+
 ## Usage
+
+### As a Command Line application
+
+```text
+
+$ anne
+  Usage:  [options] [command]
+
+  Options:
+    -h, --help  output usage information
+
+  Commands:
+    lighting|l [options] <mode>  sets the keyboard lighting effect
+    layout|lt <name>             sets the keyboard layout
+
+$ anne lighting rai
+Lighting effect Rainbow set
+
+$ anne layout arr
+Layout WindowsArrows set
+```
+
+### As a Library
 
 ```javascript
 const AnneProKeyboard = require('anne-pro');

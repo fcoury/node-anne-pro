@@ -20,7 +20,7 @@ class AnneProKeyboard extends EventEmitter {
   }
 
   setLightingMode(mode) {
-    this.writeMessage([9, 2, 1, mode]);
+    return this.sendQuery([9, 2, 1, mode]);
   }
 
   setLightingSettings(speed, brightness) {
@@ -37,7 +37,7 @@ class AnneProKeyboard extends EventEmitter {
   }
 
   setLayout(layout) {
-    this.writeMessage([7, 2, 3, layout]);
+    return this.sendQuery([7, 2, 3, layout]);
   }
 
   getLayout() {

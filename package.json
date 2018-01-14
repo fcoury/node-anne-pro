@@ -9,8 +9,12 @@
   "engine": {
     "node": "^8.0.0"
   },
+  "bin": {
+    "anne": "./bin/anne.js"
+  },
   "dependencies": {
     "bplist-parser": "^0.1.1",
+    "commander": "2.13.0",
     "core-bluetooth": "https://github.com/fcoury/node-core-bluetooth.git",
     "debug": "^2.2.0",
     "ffi": "^2.0.0",

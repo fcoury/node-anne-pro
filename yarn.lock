@@ -20,6 +20,10 @@ bplist-parser@^0.1.1:
   dependencies:
     big-integer "^1.6.7"
 
+commander@2.13.0:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+
 "core-bluetooth@https://github.com/fcoury/node-core-bluetooth.git":
   version "0.0.0"
   resolved "https://github.com/fcoury/node-core-bluetooth.git#9f52dc1766f57fbdd21f26f82db35a381931a3a8"
