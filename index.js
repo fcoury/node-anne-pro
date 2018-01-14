@@ -9,6 +9,7 @@ class AnneProKeyboard extends EventEmitter {
   connect() {
     this.centralManager = new CentralManager();
     this.centralManager.on('stateUpdate', this.statusUpdated.bind(this));
+    this.centralManager.on('peripheralConnectFail', this.connectionFailed.bind(this));
     return new Promise((resolve, reject) => {
       this.resolve = resolve;
       this.reject = reject;
@@ -17,6 +18,26 @@ class AnneProKeyboard extends EventEmitter {
 
   setLightingMode(mode) {
     this.writeMessage([9, 2, 1, mode]);
+  }
+
+  setLayout(layout) {
+    this.writeMessage([7, 2, 3, layout]);
+  }
+
+  getKeyboardId() {
+    return this.sendQuery([2, 1, 1]);
+  }
+
+  getMacro(num) {
+    return this.sendQuery([5, 2, 5, num]);
+  }
+
+  sendQuery(message) {
+    return new Promise((resolve, reject) => {
+      this.once('dataError', (error) => reject(error));
+      this.once('receivedData', (data) => resolve(data));
+      this.writeMessage(message);
+    });
   }
 
   getService(uuid) {
@@ -47,13 +68,21 @@ class AnneProKeyboard extends EventEmitter {
       this.peripheral = connectedPeripherals[0];
       this.peripheral.on('connect', this.keyboardConnected.bind(this));
       this.peripheral.on('servicesDiscover', this.servicesDiscovered.bind(this));
+      this.peripheral.on('connectFail', this.connectionFailed.bind(this));
+      this.peripheral.on('characteristicValueUpdate', this.receivedData.bind(this));
       this.centralManager.connect(this.peripheral);
+    } else {
+      this.reject(new Error('Keyboard not connected'));
     }
   }
 
   keyboardConnected() {
     this.log('connected');
     this.peripheral.discoverServices();
+  }
+
+  connectionFailed(error) {
+    console.log('Connection failed', error);
   }
 
   servicesDiscovered(services) {
@@ -67,7 +96,17 @@ class AnneProKeyboard extends EventEmitter {
   characteristicsDiscovered(characteristics) {
     this.log('characteristics', characteristics);
     this.characteristics = characteristics;
+    this.readCharacteristic.setNotifyValue(true);
+    this.readCharacteristic.on('valueUpdate', this.receivedData.bind(this));
     this.resolve(this);
+  }
+
+  receivedData(value, error) {
+    if (error) {
+      return this.emit('dataError', error);
+    }
+
+    this.emit('receivedData', value);
   }
 
   log(...s) {
@@ -96,5 +135,11 @@ AnneProKeyboard.LightingModes = {
   Colorful: 18,
 };
 
+AnneProKeyboard.Layouts = {
+  Windows: 1,
+  WindowsArrows: 2,
+  Mac: 3,
+  Custom: 128,
+};
+
 module.exports = AnneProKeyboard;
-module.exports.LightingModes = AnneProKeyboard.LightingModes;

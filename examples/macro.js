@@ -1,8 +1,9 @@
 const AnneProKeyboard = require('../index');
 
 new AnneProKeyboard().connect().then(kb => {
-  console.log('setting Rainbow effect');
-  kb.setLightingMode(AnneProKeyboard.LightingModes.Rainbow);
+  return kb.getMacro(2);
+}).then(data => {
+  console.log('data', data);
   process.exit(0);
 }).catch(error => {
   console.log(error.toString());
