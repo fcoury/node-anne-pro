@@ -1,0 +1,22 @@
+{
+  "name": "anne-pro",
+  "version": "0.1.0",
+  "description": "Library to interact with the Anne Pro keyboard via bluetooth",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": "https://github.com/fcoury/node-anne-pro",
+  "author": "Felipe Coury <felipe.coury@gmail.com>",
+  "engine": {
+    "node": "^8.0.0"
+  },
+  "dependencies": {
+    "bplist-parser": "^0.1.1",
+    "core-bluetooth": "https://github.com/fcoury/node-core-bluetooth.git",
+    "debug": "^2.2.0",
+    "ffi": "^2.0.0",
+    "lodash": "4.17.4",
+    "nodobjc": "^2.1.0",
+    "re-emitter": "^1.1.1",
+    "uuid": "^2.0.1"
+  }
+}
