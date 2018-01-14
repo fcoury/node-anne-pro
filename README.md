@@ -1,6 +1,6 @@
 # node-anne-pro
 
-[![npm version](https://badge.fury.io/js/node-anne-pro.svg)](https://badge.fury.io/js/node-anne-pro)
+[![npm version](https://badge.fury.io/js/anne-pro.svg)](https://badge.fury.io/js/anne-pro)
 
 > Node.js 8 library for interacting with the Anne Pro keyboard
 
