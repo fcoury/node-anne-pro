@@ -1,11 +1,20 @@
 const AnneProKeyboard = require('../index');
 
-new AnneProKeyboard().connect().then(kb => {
-  return kb.getMacro(2);
-}).then(data => {
-  console.log('data', data);
+function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis));
+}
+
+async function main() {
+  const kb = await (new AnneProKeyboard().connect());
+  const macros = [];
+  while (true) {
+    const macro = await kb.getMacro(macros.length);
+    if (!macro) { break; }
+    console.log('macro', macro);
+    macros.push(macro);
+    await sleep(500);
+  }
   process.exit(0);
-}).catch(error => {
-  console.log(error.toString());
-  process.exit(1);
-});
+}
+
+main();

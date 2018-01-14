@@ -1,5 +1,8 @@
 const { EventEmitter } = require('events');
 const { CentralManager, Peripheral, CharacteristicWriteType } = require('core-bluetooth');
+const _ = require('lodash');
+
+const Keys = require('./keys');
 
 const ANNE_PRO_SERVICE_UUID = "F000FFC0-0451-4000-B000-000000000000";
 const ANNE_PRO_READ_UUID = "F000FFC1-0451-4000-B000-000000000000";
@@ -20,16 +23,62 @@ class AnneProKeyboard extends EventEmitter {
     this.writeMessage([9, 2, 1, mode]);
   }
 
+  setLightingSettings(speed, brightness) {
+    this.writeMessage([9, 4, 2, speed, brightness, 0]);
+  }
+
+  getLightingMode() {
+    return this.sendQuery([9, 1, 8]).then(data => {
+      return {
+        code: data[3],
+        name: _.invert(AnneProKeyboard.LightingModes)[data[3]],
+      };
+    });
+  }
+
   setLayout(layout) {
     this.writeMessage([7, 2, 3, layout]);
+  }
+
+  getLayout() {
+    return this.sendQuery([7, 1, 4]).then(data => {
+      return {
+        code: data[3],
+        name: _.invert(AnneProKeyboard.Layouts)[data[3]],
+      };
+    });
   }
 
   getKeyboardId() {
     return this.sendQuery([2, 1, 1]);
   }
 
+  getFirmwareVersion() {
+    return this.sendQuery([10, 0]);
+  }
+
   getMacro(num) {
-    return this.sendQuery([5, 2, 5, num]);
+    return this.sendQuery([5, 2, 5, num]).then(data => {
+      const len = data[1];
+      const index = data[6];
+
+      if (len < 0x1d) {
+        return null;
+      }
+
+      return {
+        data,
+        index,
+        triggerCode: data[8],
+        triggerKey: Keys.getName(data[8]),
+      };
+    });
+  }
+
+  getMacroDefinition(num) {
+    // new byte[]{(byte) num, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0}
+    const data = [num, 0, 0, 0, 0, 0, 0, 0];
+    return this.sendQuery([])
   }
 
   sendQuery(message) {
