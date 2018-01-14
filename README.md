@@ -24,7 +24,7 @@ npm install anne-pro
 ## Usage
 
 ```javascript
-const AnneProKeyboard = require('../index');
+const AnneProKeyboard = require('anne-pro');
 
 new AnneProKeyboard().connect().then(kb => {
   console.log('setting Rainbow effect');
